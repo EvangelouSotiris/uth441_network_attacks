@@ -36,10 +36,10 @@ After choosing the targets we are selecting the tab MITM (Man In The Middle) and
 
 Now all the packets between the victim and the gateway are passing through our attacker host. We can ensure that by doing a simple PING between the two targets and checking one of those ICMP packets from wireshark in our attacker host:
 
-![ping](https://user-images.githubusercontent.com/28576118/71473911-bd94ec80-27e1-11ea-8a16-614065e09509.png)
-
-Doing a simple <i> ip a </i> on our attacker host will show us that the source MAC address of the ICMP packet has the attacker as source. 
-
 ![analysis](https://user-images.githubusercontent.com/28576118/71473909-bc63bf80-27e1-11ea-9ea3-59a150e702ec.png)
+
+Doing a simple <i> ip a </i> on our attacker host will show us that the source MAC address of the ICMP packet has the attacker's MAC as source. 
+
+![ipa](https://user-images.githubusercontent.com/28576118/71474168-ed90bf80-27e2-11ea-8b71-6025032fddff.png)
 
 This means that any of these packets are passing through our host that is the man in the middle, and we can see the packets passing through and do a lot of <i> nasty </i> stuff with the targets' connection.
