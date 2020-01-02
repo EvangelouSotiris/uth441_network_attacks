@@ -31,4 +31,13 @@ We can do this as well using ettercap, by choosing dns_spoof in the Plugins tab 
 
 ![varwww](https://user-images.githubusercontent.com/28576118/71664879-68b62080-2d63-11ea-9d27-59f1fd54d2da.png)
 
+- Now, we need to set up the appropriate file in ettercap in order to redirect the victim to our facebook replica when he asks for the facebook.com domain. Specifically in the <b> /etc/ettercap/etter.dns </b> we insert the following lines:
+
+![etterdns](https://user-images.githubusercontent.com/28576118/71665190-9b144d80-2d64-11ea-9aa4-010823d571d1.png)
+
+So, we are directing the requests asking for these domain names to our own IP and thus our made index.html.
+
+
+
+
 
