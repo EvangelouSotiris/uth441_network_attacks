@@ -33,11 +33,18 @@ We can do this as well using ettercap, by choosing dns_spoof in the Plugins tab 
 
 - Now, we need to set up the appropriate file in ettercap in order to redirect the victim to our facebook replica when he asks for the facebook.com domain. Specifically in the <b> /etc/ettercap/etter.dns </b> we insert the following lines:
 
-![etterdns](https://user-images.githubusercontent.com/28576118/71665190-9b144d80-2d64-11ea-9aa4-010823d571d1.png)
+![etterdns](https://user-images.githubusercontent.com/28576118/71693463-38976d80-2db5-11ea-94b5-164de8a0632d.png)
 
-So, we are directing the requests asking for these domain names to our own IP and thus our made index.html.
+So, we are directing the requests asking for these domain names to our own IP and thus our made index.html. When the victim tries to ping facebook.com we see the following message in ettercap:
 
+![dnspoof](https://user-images.githubusercontent.com/28576118/71686435-e00ba480-2da3-11ea-806d-8c46baad67d0.png)
 
+and from the victim side we can see that it looks for facebook.com on our attacker host:
 
+![pingfb](https://user-images.githubusercontent.com/28576118/71693468-3af9c780-2db5-11ea-8497-344ac2261c56.png)
+
+Thus, when the victim tries to enter credentials and log in, we will be able to grab them plaintext from wireshark:
+
+![postreq](https://user-images.githubusercontent.com/28576118/71694221-30403200-2db7-11ea-9a16-402868f49985.png)
 
 
