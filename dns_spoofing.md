@@ -35,7 +35,7 @@ We can do this as well using ettercap, by choosing dns_spoof in the Plugins tab 
 
 ![etterdns](https://user-images.githubusercontent.com/28576118/71693463-38976d80-2db5-11ea-94b5-164de8a0632d.png)
 
-So, we are directing the requests asking for these domain names to our own IP and thus our made index.html. When the victim tries to ping facebook.com we see the following message in ettercap:
+So, we are directing the requests asking for these domain names (facebook.com or any subdirectory in facebook.com) to our own IP and thus our made index.html. When the victim tries to ping facebook.com we see the following message in ettercap:
 
 ![dnspoof](https://user-images.githubusercontent.com/28576118/71686435-e00ba480-2da3-11ea-806d-8c46baad67d0.png)
 
