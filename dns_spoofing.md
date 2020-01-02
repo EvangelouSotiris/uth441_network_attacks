@@ -25,7 +25,7 @@ We can do this as well using ettercap, by choosing dns_spoof in the Plugins tab 
 
 - Firstly we create the replica of the facebook login page using HTML and CSS:
 
-![replica](https://user-images.githubusercontent.com/28576118/71664710-abc3c400-2d62-11ea-8556-1bdf084c97b8.png)
+![fb](https://user-images.githubusercontent.com/28576118/71694799-ec4e2c80-2db8-11ea-866f-07b502b3c521.png)
 
 - Then we need to set it up in our localhost as a website. We will use Apache2 for that cause. After moving the files in /var/www/html subdir we restart the apache2 service and we can now access the facebook replica page from http://127.0.0.1:80 .
 
