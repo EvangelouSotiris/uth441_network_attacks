@@ -20,3 +20,15 @@ As the attacker, since we are intercepting those DNS requests, we would also lik
 We can do this as well using ettercap, by choosing dns_spoof in the Plugins tab while arp poisoning the 2 targets:
 
 ![pluginsdns](https://user-images.githubusercontent.com/28576118/71663634-a82e3e00-2d5e-11ea-9ce4-08086bb290c5.png)
+
+- Let's say that we want to intercept the DNS requests for <b> Facebook.com </b> and we want to redirect the victim to a replica of the facebook login page that we crafted in order to steal credentials.
+
+- Firstly we create the replica of the facebook login page using HTML and CSS:
+
+![replica](https://user-images.githubusercontent.com/28576118/71664710-abc3c400-2d62-11ea-8556-1bdf084c97b8.png)
+
+- Then we need to set it up in our localhost as a website. We will use Apache2 for that cause. After moving the files in /var/www/html subdir we restart the apache2 service and we can now access the facebook replica page from http://127.0.0.1:80 .
+
+![varwww](https://user-images.githubusercontent.com/28576118/71664879-68b62080-2d63-11ea-9d27-59f1fd54d2da.png)
+
+
