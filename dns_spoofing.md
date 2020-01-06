@@ -1,5 +1,13 @@
 # DNS SPOOFING ATTACK
 
+## Protocol Description
+Whenever we surf the internet, we mostly visit websites using their hostnames (e.g. google.com, github.com etc.), not the IP addresses where these websites are hosted. In order to do that, some IP-Hostname pairs must exist, and this is offered by the DNS <b>(Domain Name Server)</b> protocol.
+DNS is a distributed database implemented in a hierarchy of name servers. It is an application layer protocol for message exchange between clients and servers.
+
+<img src="https://flylib.com/books/2/203/1/html/2/images/cn061201.jpg">
+
+Whenever we want to know the IP for a specific domain name we need to do a nameserver lookup (DNS Request), to specific DNS servers. If they have the answer they reply to us, or they might direct us to another nameserver that might have our answer.
+
 ## Preparation
 
 In order to prepare for the DNS spoofing attack we need to have a victim machine's IP, the gateway's IP, and we need to be in the same local network as the targets.
