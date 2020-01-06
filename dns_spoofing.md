@@ -4,9 +4,17 @@
 Whenever we surf the internet, we mostly visit websites using their hostnames (e.g. google.com, github.com etc.), not the IP addresses where these websites are hosted. In order to do that, some IP-Hostname pairs must exist, and this is offered by the DNS <b>(Domain Name Server)</b> protocol.
 DNS is a distributed database implemented in a hierarchy of name servers. It is an application layer protocol for message exchange between clients and servers.
 
-<img src="https://flylib.com/books/2/203/1/html/2/images/cn061201.jpg">
+<img width="60%" src="https://flylib.com/books/2/203/1/html/2/images/cn061201.jpg">
 
-Whenever we want to know the IP for a specific domain name we need to do a nameserver lookup (DNS Request), to specific DNS servers. If they have the answer they reply to us, or they might direct us to another nameserver that might have our answer.
+Whenever we want to know the IP for a specific domain name we need to do a DNS Request to a local nameserver. 
+If it has the answer stored in its database, it replies with a DNS Reply. If not, it requests one the root nameservers, that in turn routes the query to an intermediate or authoritative nameserver that can answer our request. At the end, we get back the IP corresponding to that domain name.
+
+## DNS Spoofing description
+During the ARP Spoofing markdown, we saw how if we are in the same local network, we can bring our computer to appear (maliciously) as the destination computer to a communication, and thus become a "proxy" between a connection, that can intercept or even tweak the packets coming through. 
+
+In such a way, we can intercept the DNS Requests coming through, and answer with our own crafted DNS replies that will match the wanted domain name (e.g. facebook.com) to an IP that we can control. If this succeeds, the victim entering facebook will land on our maliciously crafted replica, and enter their real credentials in our unsafe and controlled environment.
+
+<img width="70%" src="https://www.keycdn.com/img/support/dns-spoofing.png">
 
 ## Preparation
 
@@ -33,7 +41,7 @@ We can do this as well using ettercap, by choosing dns_spoof in the Plugins tab 
 
 - Firstly we create the replica of the facebook login page using HTML and CSS:
 
-![fb](https://user-images.githubusercontent.com/28576118/71694799-ec4e2c80-2db8-11ea-866f-07b502b3c521.png)
+<img width="70%" src="https://user-images.githubusercontent.com/28576118/71694799-ec4e2c80-2db8-11ea-866f-07b502b3c521.png">
 
 - Then we need to set it up in our localhost as a website. We will use Apache2 for that cause. After moving the files in /var/www/html subdir we restart the apache2 service and we can now access the facebook replica page from http://127.0.0.1:80 .
 
