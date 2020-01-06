@@ -1,5 +1,15 @@
 # ARP SPOOFING ATTACK
 
+## Protocol Description
+The various applications use IP addresses to communicate with computers in other networks, but when in the same network, the communication is achieved using MAC Addressing in the Layer 2 of the OSI model.
+
+A new computer connecting to the network doesn't know the MAC addresses if the machines it wants to reach and this is where <b>Address Resolution Protocol (ARP) </b> comes into play. ARP is used to find MAC addresses of computers using their IP address, and in the arp tables these pairings are kept by each computer.
+
+## Attack Description
+
+ARP <b>poisoning/spoofing</b> is when an attacker sends falsified ARP messages over a local area network (LAN) to link an attacker’s MAC address with the IP address of a legitimate computer or server on the network. 
+Once the attacker’s MAC address is linked to an authentic IP address, the attacker can receive any messages directed to the legitimate MAC address. As a result, the attacker can intercept, modify or block communicates to the legitimate MAC address.
+
 ## Preparation
 
 In order to perform an ARP Spoofing attack, we created a victim VM (Ubuntu Server 19.04) in Virtualbox.
