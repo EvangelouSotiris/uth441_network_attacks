@@ -24,18 +24,36 @@ useful data. Therefore, we need to interact with the web server as legitimate us
 and do the followings:item Visit https://www.heartbleedlabelgg.com from your browser.
 
 * Visit https://www.heartbleedlabelgg.com from your browser.
+
+![Screenshot](./img/page.png)
+
 * Login as the site administrator. (User Name:admin; Password:seedelgg)
+
+![Screenshot](./img/adminlog.png)
+
 * Add Boby as friend.
+
+![Screenshot](./img/addfriend.png)
+
 * Send Boby a private message.
+
+![Screenshot](./img/message.png)
 
 After you have done enough interaction as legitimate users, you can launch the attack and see what information you can 
 get out of the victim server.The code that we use is called <a href="http://www.cis.syr.edu/~wedu/seed/Labs_12.04/Networking/Heartbleed/attack.py">attack.py</a> which was originally written by Jared Stafford.
+
+![Screenshot](./img/start.png)
 
 You may need to run the attack code multiple times to get useful data. Try and see whether you can get the following 
 information from the target server:
 
 * User name and password.
+
+![Screenshot](./img/usernamepass.png)
+
 * Admin Activity
+
+![Screenshot](./img/boby%20message.png)
 
 To fix the Heartbleed vulnerability, the best way is to update the OpenSSL library to the newest version.This can be 
 achieved using the following commands:

@@ -54,11 +54,17 @@ Firstly we launch a terminal in order to start the POX network controller, which
 
 * ./run_pox.sh
 
+![Screenshot](./img/run_pox.png)
+
 In another terminal (if you are using a remote machine, make sure the X-forwarding is enabled.):
 
 * ./run.sh
 
 This will start the Mininet network emulator and there will be terminals pops up for each of the nodes in the network. Close the terminals for switches and controllers, but keep the terminals for Alice, Bob and Eve.
+
+![Screenshot](./img/run.png)
+
+![Screenshot](./img/spawn_term.png)
 
 ## In Alice's Terminal
 
@@ -68,11 +74,15 @@ Alice will now create some traffic by pinging Bob:
 
 You should be able to see some output like the following:
 
+![Screenshot](./img/ping.png)
+
 ## In Eve's Terminal
 
 We will now run tcpdump to eavesdrop the traffic betweeh Alice (10.0.0.1) and Bob (10.0.0.2):
 
 * sudo tcpdump -n host 10.0.0.1
+
+![Screenshot](./img/tcpdump.png)
 
 Since the switch between Alice/Bob/Eve already learned about the address of Alice and Bob, it will not boradcast the packet and therefore Eve will not be able to see the packets between Alice and Bob.
 
@@ -80,6 +90,10 @@ Now, we will let Eve generate some ethernet packets with randomly generated sour
 
 * python attack.py 
 
+![Screenshot](./img/attack.png)
+
 You should be able to see Eve starts sending a lot of packets into the network.
 
 Back to Eve's first terminal (switch back by "ctrl+a 0). After the attack traffic overflowed swtiches' address table, switches will start to broadcast Alice and Bob's traffic and they should start showing up in Eve's tcpdump trace:
+
+![Screenshot](./img/tcp_out.png)
