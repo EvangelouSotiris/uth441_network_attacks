@@ -1,0 +1,20 @@
+Metadata-Version: 1.1
+Name: ltprotocol
+Version: 0.2.1
+Summary: Twisted-based client and server for protocols which begin with a length and type field
+Home-page: http://www.dound.com/projects/python/ltprotocol/
+Author: David Underhill
+Author-email: dgu@cs.stanford.edu
+License: GPL
+Description: Provides a Twisted-based client and server implementation for protocols which
+        begin with a legnth and type field.  Create your protocol by constructing an
+        LTProtocol with a list of LTMessage objects which specify your protocol.  Use
+        LTTwistedServer and LTTwistedClient to create a server or client.
+              
+Keywords: networking twisted protocol nonblocking internet length type
+Platform: UNKNOWN
+Classifier: License :: OSI Approved :: GNU General Public License (GPL)
+Classifier: Programming Language :: Python
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Internet
