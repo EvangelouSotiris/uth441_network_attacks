@@ -1,0 +1,62 @@
+= ltprotocol =
+
+LTProtocol is a Twisted library extension written in Python. It provides a
+Twisted-based client and server implementation for protocols which begin with a
+length and type field.
+
+Create your protocol by constructing an LTProtocol with a list of LTMessage
+objects which specify your protocol.  Use LTTwistedServer and LTTwistedClient to
+create a server or client.  You may wish to subclass these classes in order to
+take custom actions when a client connects or disconnects.
+
+The page at [http://www.dound.com/projects/python/ltprotocol/] is the most
+current source of information.  Please email dgu@cs.stanford.edu with any
+questions, patches, or general discussion.
+
+== requirements ===
+
+LTProtocol runs on Python version 2.5 or greater, with the following dependencies:
+* [http://pypi.python.org/pypi/Twisted/8.2.0]
+
+== getting started ==
+
+Take a look at the example at [http://dound.com/projects/python/ltprotocol/].
+
+== changelog ==
+v0.2.1 (2009-Sep-15):
+ * Logging module now used in place of print calls
+ * Added __str__() method for LTProtocol
+
+v0.2.0 (2009-May-21):
+ * LTTwistedClient now has a newly connected callback to match LTTwistedServer
+ * Added optional callback which is fired when a connection is lost
+ * Callbacks now passed an LTProtocol object vice LTProtocol.transport
+ * send() now defined on LTProtocol vice LTProtocol.transport
+ * LTProtocol now as a variable to track whether it is connected or not
+
+v0.1.8 (2009-May-21):
+ * move send() method so it is added all new LTTwistedProtocol objects (on
+   connection initiation) rather than only adding it to server-side
+   LTTwistedProtocol objects
+ * extensibility fix: LTTwistedClient created a generic protocol instantiation
+   rather than the specific one it was a client for
+ * Typo fix in print statement
+ * Thanks to Glen Gibb for suggestions for the above patches
+ * Add option to turn off verbose printing
+
+v0.1.7 (2009-May-01):
+ * added send() method to connection object to make it easy to send messages
+   from a connection without needing a reference to its parent server
+
+v0.1.6 (2009-Apr-19):
+ * added optional callback for when a client connections to the server
+
+v0.1.5 (2009-Mar-09):
+ * added param to recv_callback: transport layer
+
+v0.1.4:
+ * Removed extraneous print statement
+
+v0.1.2:
+ * Added support for specifying the size of the integers used to represent the
+   length and type fields
