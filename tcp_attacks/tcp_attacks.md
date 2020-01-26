@@ -23,21 +23,25 @@ When a new TCP connection is attempted the client and the server exchange 3 mess
 2. Server: `SYN+ACK`
 3. Client: `ACK`
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Tcp_normal.svg/1920px-Tcp_normal.svg.png" width="50%">
+<img src="https://camo.githubusercontent.com/f62aa97791bbf9a2d25eff8b882cb3438e8cd69c/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f7468756d622f392f39612f5463705f6e6f726d616c2e7376672f3139323070782d5463705f6e6f726d616c2e7376672e706e67" width="50%">
 
+> Image taken from Wikipedia, https://en.wikipedia.org/wiki/SYN_flood
 
 The first `SYN` informs the server that a client wants to establish a new connection. The server stores this request in a queue and the connection is called a *half-open connection*. When the third step (the client sending the `ACK` ) is completed the request is removed from this queue.
 
 In this attack, the queue of the half-open connections is used to make the server unresponsive to new clients. The attacker sends a lot of `SYN` without replying `ACK`, filling the queue and binding resources of the server. When a legitimate client tries to connect to the server, the server will not be able to accept new `SYN` packets.
 
-<img src="https://upload.wikimedia.org/wikipedia/commons/9/94/Tcp_synflood.png" width="50%">
+<img src="https://camo.githubusercontent.com/25195a8ac8a3c0ba79e75c743b2e2761f659f2f6/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f392f39342f5463705f73796e666c6f6f642e706e67" width="50%">
+
+> Image taken from Wikipedia, https://en.wikipedia.org/wiki/SYN_flood
 
 #### Preparation
 
 In order to perform a SYN flooding attack, we created 2 virtual machines in VirtualBox, one for the server and the other for a client.
 The role of the attacker is given to the host machine.
 
-<img src="https://spanagiot.gr/networks/vms.png" width="50%">
+<img src="https://camo.githubusercontent.com/18a9109945b800ef925b0200b6f5a1f941ee8be4/68747470733a2f2f7370616e6167696f742e67722f6e6574776f726b732f766d732e706e67" width="50%">
+
 
 To demonstrate this attack, we need to turn off the protection enabled by default (in Debian based OSes) using the command
 ```bash
