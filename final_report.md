@@ -18,6 +18,8 @@
 6. TCP Session Highjacking
 7. Heartbleed
 
+   <div class="page"/>
+
 # 1: Mac Table Overflow
 
 ## Introduction
@@ -158,6 +160,8 @@ Back to Eve's first terminal (switch back by "ctrl+a 0). After the attack traffi
 
 ![Screenshot](./mac_overflow/img/tcp_out.png)
 
+   <div class="page"/>
+
 # 2: ARP Protocol Spoofing
 
 ## Protocol Description
@@ -216,6 +220,8 @@ Doing a simple <i> ip a </i> on our attacker host will show us that the source M
 ![ipa](https://user-images.githubusercontent.com/28576118/71474168-ed90bf80-27e2-11ea-8b71-6025032fddff.png)
 
 This means that any of these packets are passing through our host that is the man in the middle, and we can see the packets passing through and do a lot of <i> nasty </i> stuff with the targets' connection.
+
+   <div class="page"/>
 
 # 3: DNS Protocol Spoofing
 
@@ -284,6 +290,8 @@ and from the victim side we can see that it looks for facebook.com on our attack
 Thus, when the victim tries to enter credentials and log in, we will be able to grab them plaintext from wireshark:
 
 ![postreq](https://user-images.githubusercontent.com/28576118/71694221-30403200-2db7-11ea-9a16-402868f49985.png)
+
+   <div class="page"/>
 
 # 4: TCP SYN Flooding
 
@@ -410,6 +418,8 @@ ssh: connect to host 10.2.1.16 port 22: Operation timed out
 
 We need to specify here that this attack will only affect the port 22 and the SSH service. If telnet was running on port 23 it would not be affected because the each port has its own connection queue. Also, the server will continue operating normally, without any indication that an attack is happening.
 
+   <div class="page"/>
+
 # 5: TCP RST Attack
 
 There are two ways to terminate and established TCP connection between two hosts (let's call them A and B). The first way is done with A informing B that it wants to terminate the connection by sending a `FIN` packet and expects and `ACK` from B. If B wants also to terminate his side of the connection (because TCP connections are two one-way "pipes") can also send a `FIN` packet and after `ACK` is received the connection is considered closed.
@@ -476,6 +486,8 @@ user@server:~$ packet_write_wait: Connection to 10.2.1.16 port 22: Broken pipe
 ```
 
 which indicates that our attack was successful!
+
+   <div class="page"/>
 
 # 6: TCP Session Highjacking
 
@@ -563,6 +575,8 @@ Our attack worked!
 But not only that. Because we injected a forged packet and the client has no idea about it, it will send a packet that contains an **old** sequence number that the server will ignore so it won't acknowledge it. The client then will keep resending the data and the connection will end up in a loop and the server will disconnect the client after a while. This is what we will see on Wireshark
 
 ![image](https://user-images.githubusercontent.com/7012176/73145000-8f8e1b00-40b3-11ea-9968-d1833b570f83.png)
+
+   <div class="page"/>
 
 # 7: Heartbleed
 
