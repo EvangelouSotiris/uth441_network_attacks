@@ -4,10 +4,4 @@
 1) TCP attacks: SYN Flooding, RST attack, TCP Session Hijacking
 2) Mac address table overflow attack
 3) Spoof attacks: ARP spoofing, DNS spoofing
-4) BGP routing path highjacking
-5) Heartbleed 
-
-## Resources
-- (1) http://www.cis.syr.edu/~wedu/seed/Labs_12.04/Networking/TCPIP/TCPIP.pdf
-- (2) https://github.com/mininet/mininet/wiki/Mac-address-table-overflow-attack
-- (4) https://github.com/mininet/mininet/wiki/BGP-Path-Hijacking-Attack-Demo
+4) Heartbleed
